@@ -12,16 +12,27 @@
 
     $product_model = new product_model();
     
-    if ($_POST) {
-        $postData = array('Course' =>$_POST['course'],'Difficulty Type' =>$_POST['difficulty'],'Question' =>$_POST['question'],'OptionA' => $_POST['optionA'],'OptionB' => $_POST['optionB'],'OptionC' => $_POST['optionC'],'OptionD' => $_POST['optionD'],'Answer' => $_POST['answer']);
-        $product_model->addProduct($postData);
+    $id = (isset($_GET['id']) && $_GET['id'] > 0) ? $_GET['id'] : 0;
+    $action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
+
+    if($action=='delete' && $id>0){
+        $product_model->deleteProduct($id);
+        $id = 0;
+    }    
     
+    if ($_POST) {
+        $postData = array('CategoryId' =>$_POST['course'],'DifficultyId' =>$_POST['difficulty'],'Question' =>$_POST['question'],'OptionA' => $_POST['optionA'],'OptionB' => $_POST['optionB'],'OptionC' => $_POST['optionC'],'OptionD' => $_POST['optionD'],'Answer' => $_POST['answer']);
+        if ($_POST['id'] > 0) {
+            $product_model->editProduct($_POST['id'],$postData);    
+        }
+        else {
+            $product_model->addProduct($postData);     
+        }
+       
+                
     }
     $productArray = $product_model->viewProduct(); 
-    $id = (isset($_GET['id']) && $_GET['id'] > 0) ? $_GET['id'] : 0;
-    /*echo '<pre>';
-    print_r($productArray);
-    exit;*/
+
 ?>
 
 <!DOCTYPE html>
@@ -198,15 +209,16 @@
                             <div class="block-content collapse in">
                                 <div class="span12">
                                      <form class="form-horizontal" method="POST">
+                                     <input type="hidden" name="id" value="<?php echo $id; ?>" >
                                       <fieldset>
                                         <legend>Add Questions</legend>
                                         <div class="control-group">
                                           <label class="control-label">Course<span class="required">*</span></label>
                                             <div class="controls">
-                                                <select name="course" value="<?php echo $id ? $productArray[$id]['CategoryId'] : '';?>" >
+                                                <select name="course" value="">
                                                   <option>--Select the Course--</option>
                                                   <?php foreach ($categoryArray as $key => $categoryValue) {?>
-                                                    <option value="<?php $categoryValue['Name']; ?>"><?php echo $categoryValue['Name']; ?></option>
+                                                    <option value="<?php echo $categoryValue['CategoryId']; ?>" <?php echo ($id && $productArray[$id]['CategoryId']==$categoryValue['CategoryId']) ? 'selected' : ''; ?> > <?php echo $categoryValue['Name']; ?></option>
                                                     <?php
                                                     }
                                                     ?>
@@ -219,7 +231,7 @@
                                                 <select name="difficulty" value="<?php echo $id ? $productArray[$id]['DifficultyId'] : '';?>">
                                                   <option>--Select the Difficulty Level--</option>
                                                     <?php foreach ($difficultyArray as $key => $difficultyValue) { ?>
-                                                        <option value="<?php $difficultyValue['Name']; ?>"><?php echo $difficultyValue['Name']; ?></option>
+                                                        <option value="<?php echo $difficultyValue['DifficultyId']; ?>" <?php echo ($id && $productArray[$id]['DifficultyId']==$difficultyValue['DifficultyId']) ? 'selected' : ''; ?>><?php echo $difficultyValue['Name']; ?></option>
                                                     <?php
                                                     }
                                                     ?>
@@ -229,7 +241,7 @@
                                         <div class="control-group">
                                           <label class="control-label" for="focusedInput">Question</label>
                                             <div class="controls">
-                                                <textarea class="input-xlarge focused" name="question" id="focusedInput" value="<?php echo $id ? $productArray[$id]['Question'] : '';?>" placeholder="Write the question..." style="margin: 0px; width: 473px; height: 115px"></textarea>
+                                                <textarea class="input-xlarge focused" name="question" id="focusedInput" placeholder="Write the question..." style="margin: 0px; width: 473px; height: 115px"><?php echo $id ? $productArray[$id]['Question'] : '';?></textarea>
                                             </div>
                                         </div>
                                         <div class="control-group">
@@ -261,15 +273,15 @@
                                             <div class="controls">
                                                 <select name="answer" value="<?php echo $id ? $productArray[$id]['Answer'] : '';?>">
                                                   <option>--Select the Answer--</option>
-                                                  <option value="1">OptionA</option>
-                                                  <option value="2">OptionB</option>
-                                                  <option value="3">OptionC</option>
-                                                  <option value="4">OptionD</option>
+                                                  <option value="1" <?php echo ($id && $productArray[$id]['Answer']==1) ? 'selected' : ''; ?>>OptionA</option>
+                                                  <option value="2" <?php echo ($id && $productArray[$id]['Answer']==2) ? 'selected' : ''; ?>>OptionB</option>
+                                                  <option value="3" <?php echo ($id && $productArray[$id]['Answer']==3) ? 'selected' : ''; ?>>OptionC</option>
+                                                  <option value="4" <?php echo ($id && $productArray[$id]['Answer']==4) ? 'selected' : ''; ?>>OptionD</option>
                                                 </select>
                                             </div>
                                         </div>   
                                         <div class="form-actions">
-                                          <button type="submit" class="btn btn-primary">Add Question</button>
+                                          <button type="submit" class="btn btn-primary"><?php echo $id ? 'Save':'Add Question'; ?></button>
                                           <button type="reset" class="btn">Cancel</button>
                                         </div>
                                     </fieldset>
@@ -310,8 +322,8 @@
                                         ?>                                            
                                             <tr>
 
-                                                <td><?php echo $value['CategoryId']; ?></td>
-                                                <td><?php echo $value['DifficultyId']; ?></td>
+                                                <td><?php echo $categoryArray[$value['CategoryId']]['Name']; ?></td>
+                                                <td><?php echo $difficultyArray[$value['DifficultyId']]['Name']; ?></td>
                                                 <td><?php echo $value['Question']; ?></td>
                                                 <td><?php echo $value['OptionA']; ?></td>
                                                 <td><?php echo $value['OptionB']; ?></td>

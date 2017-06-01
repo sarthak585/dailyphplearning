@@ -35,8 +35,7 @@ class product_model {
      * @return status of affected rows.
      */
 	function addProduct($productAray) {
-		$sql = "INSERT INTO product(Question, OptionA, OptionB, OptionC, OptionD, Answer, CategoryId, DifficultyId) VALUES ('".$productAray['Question']."','".$productAray['OptionA']."','".$productAray['OptionB']."','".$productAray['OptionC']."','".$productAray['OptionD']."','".$productAray['Answer']."','".$productAray['CategoryId']."','".$productAray['DifficultyId']."')";
-		
+		$sql = "INSERT INTO product(Question, OptionA, OptionB, OptionC, OptionD, Answer, CategoryId, DifficultyId) VALUES ('".$productAray['Question']."','".$productAray['OptionA']."','".$productAray['OptionB']."','".$productAray['OptionC']."','".$productAray['OptionD']."',".$productAray['Answer'].",".$productAray['CategoryId'].",".$productAray['DifficultyId'].")";
 	 	$result = mysql_query($sql);
 
 		return mysql_affected_rows();
@@ -68,4 +67,4 @@ class product_model {
 	}
 }
 
-?>
+?>	
