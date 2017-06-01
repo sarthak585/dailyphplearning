@@ -1,38 +1,17 @@
 <?php
     include_once 'config.php';
-    include_once 'course_model.php';
+    include_once 'registration_model.php';
 
-    $category_model = new category_model();
-
-    $id = (isset($_GET['id']) && $_GET['id'] > 0) ? $_GET['id'] : 0;
-    $action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
-    
-    if($action=='delete' && $id>0){
-        $category_model->deleteCategory($id);
-        $id = 0;
-    }  
-
-    if ($_POST) {
-        $postData = array('Name' => $_POST['courseName'],'IsActive' => isset($_POST['IsActive'])?1:0);
-        
-        if ($_POST['id'] > 0) {
-            $category_model->editCategory($_POST['id'],$postData);    
-        }
-        else {
-            $category_model->addCategory($postData);     
-        }   
-        header('location: course.php');
-    }
-
-
-    $categoryArray = $category_model->viewCategory();
+    $user = new registration_model();
+    $userArray = $user->viewUser();
+    $id = $_SESSION['id'];
 ?>
 
 <!DOCTYPE html>
 <html>
     
     <head>
-        <title>Courses</title>
+        <title>Profile</title>
         <!-- Bootstrap -->
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
@@ -43,13 +22,6 @@
             <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
         <script src="vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-        <script language="JavaScript" type="text/javascript">
-                function checkDelete(CategoryId){
-                    if(confirm('Are you sure to delete?') == true) {
-                    window.location.href = "http://localhost/admin/course.php?action=delete&id="+CategoryId;
-                    }
-                }
-        </script>
     </head>
     
     <body>
@@ -154,7 +126,7 @@
                         <li>
                             <a href="index.php"><i class="icon-chevron-right"></i> Dashboard</a>
                         </li>
-                        <li class="active">
+                        <li>
                             <a href="course.php"><i class="icon-chevron-right"></i> Courses</a>
                         </li>
                         <li>
@@ -162,53 +134,63 @@
                         </li>
                         <li>
                             <a href="question.php"><i class="icon-chevron-right"></i> Questions </a>
-                        </li>
+                        </li>                        
                     </ul>
                 </div>
                 
                 <!--/span-->
                 <div class="span9" id="content">
-                    <div class="row-fluid">
+                  <div class="row-fluid">
                             <div class="navbar">
                                 <div class="navbar-inner">
                                     <ul class="breadcrumb">
                                         <i class="icon-chevron-left hide-sidebar"><a href='#' title="Hide Sidebar" rel='tooltip'>&nbsp;</a></i>
                                         <i class="icon-chevron-right show-sidebar" style="display:none;"><a href='#' title="Show Sidebar" rel='tooltip'>&nbsp;</a></i>
                                         <li class="active">
-                                            <a href="index.php">Courses</a>
+                                            <a>Profile</a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
-                    </div>
+                  </div>
                     <div class="row-fluid">
                         <!-- block -->
                         <div class="block">
                             <div class="navbar navbar-inner block-header">
-                                <div class="muted pull-left">Add Courses</div>
+                                <div class="muted pull-left">Edit Profile</div>
                             </div>
                             <div class="block-content collapse in">
                                 <div class="span12">
                                      <form class="form-horizontal" method="POST">
                                      <input type="hidden" name="id" value="<?php echo $id; ?>" >
                                       <fieldset>
-                                        <legend>Add Courses</legend>
+                                        <legend>Edit Profile</legend>
                                         <div class="control-group">
-                                          <label class="control-label" for="focusedInput">Course Name</label>
-                                             <div class="controls">
-                                                <input type="text" name="courseName" value="<?php echo $id ? $categoryArray[$id]['Name'] : '';?>" class="span3 m-wrap" placeholder="Write Course Name" />
+                                          <label class="control-label">First Name</label>
+                                            <div class="controls">
+                                               <input type="text" name="fname" class="span4 m-wrap" value="<?php echo $userArray[$id]['FirstName'];?>"/>
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                          <label class="control-label" for="optionsCheckbox">Active</label>
-                                          <div class="controls">
-                                            <label class="uniform">
-                                              <input class="uniform_on" type="checkbox" id="optionsCheckbox" name="IsActive" <?php echo ($id && $categoryArray[$id]['IsActive']) ? 'checked="checked"' : ''; ?>>
-                                            </label>
-                                          </div>
+                                          <label class="control-label">Last Name</label>
+                                            <div class="controls">
+                                               <input type="text" name="lname" class="span4 m-wrap" value="<?php echo $userArray[$id]['LastName'];?>"/>
+                                            </div>
                                         </div>
+                                        <div class="control-group">
+                                          <label class="control-label">User Name</label>
+                                            <div class="controls">
+                                            <span class="input-xlarge uneditable-input span3"><?php echo $userArray[$id]['UserName'];?></span>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                          <label class="control-label">Password</label>
+                                            <div class="controls">
+                                               <input type="text" name="password" id="password" class="span4 m-wrap" value="<?php echo $userArray[$id]['Password'];?>"/>
+                                            </div>
+                                        </div>                                        
                                         <div class="form-actions">
-                                          <button type="submit" class="btn btn-primary"><?php echo $id ? 'Update':'Add Course'; ?></button>
+                                          <button type="submit" class="btn btn-primary">Update</button>
                                           <button type="reset" class="btn">Cancel</button>
                                         </div>
                                     </fieldset>
@@ -219,50 +201,7 @@
                         </div>
                         <!-- /block -->
                     </div>
-                    <div class="row-fluid">
-                        <!-- block -->
-                            <div class="block">
-                                <div class="navbar navbar-inner block-header">
-                                    <div class="muted pull-left">Manage Courses</div>
-                                    <div class="pull-right"><span class="badge badge-info"><?php echo count($categoryArray); ?></span>
-
-                                    </div>
-                                </div>
-                                <div class="block-content collapse in">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Course Name</th>
-                                                <th>IsActive</th>                             
-                                                <th>Edit</th>                                 
-                                                <th>Delete</th>                                      
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php foreach ($categoryArray as $key => $value) {
-                                        ?>                                            
-                                            <tr>
-                                                <td><?php echo $value['Name']; ?></td>
-                                                <td><?php echo $value['IsActive']? 'Yes' : 'No'; ?></td>
-                                                <td>
-                                                    <a href="course.php?id=<?php echo $value['CategoryId']; ?>">
-                                                    <img src="images/Edit.png" height="25px" width="25px"></a>
-                                                </td>
-                                                <td>
-                                                    <a onclick="return checkDelete(<?php echo $value['CategoryId']; ?>);" style="cursor: pointer;">
-                                                    <img src="images/DeleteRed.png" height="25px" width="25px"></a>
-                                                </td>
-                                            </tr>    
-                                        <?php
-                                        }
-                                        ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                     <!-- /block -->
-                    </div>
-                </div>     
+                </div>
             </div>    
             <hr>
             <footer>
@@ -288,8 +227,43 @@
         <script src="vendors/wizard/jquery.bootstrap.wizard.min.js"></script>
 
 	<script type="text/javascript" src="vendors/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="assets/form-validation.js"></script>
         
 	<script src="assets/scripts.js"></script>
+        <script>
+
+	jQuery(document).ready(function() {   
+	   FormValidation.init();
+	});
+	
+
+        $(function() {
+            $(".datepicker").datepicker();
+            $(".uniform_on").uniform();
+            $(".chzn-select").chosen();
+            $('.textarea').wysihtml5();
+
+            $('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
+                var $total = navigation.find('li').length;
+                var $current = index+1;
+                var $percent = ($current/$total) * 100;
+                $('#rootwizard').find('.bar').css({width:$percent+'%'});
+                // If it's the last tab then hide the last button and show the finish instead
+                if($current >= $total) {
+                    $('#rootwizard').find('.pager .next').hide();
+                    $('#rootwizard').find('.pager .finish').show();
+                    $('#rootwizard').find('.pager .finish').removeClass('disabled');
+                } else {
+                    $('#rootwizard').find('.pager .next').show();
+                    $('#rootwizard').find('.pager .finish').hide();
+                }
+            }});
+            $('#rootwizard .finish').click(function() {
+                alert('Finished!, Starting over!');
+                $('#rootwizard').find("a[href*='tab1']").trigger('click');
+            });
+        });
+        </script>
     </body>
 
 </html>

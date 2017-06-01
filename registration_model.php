@@ -14,7 +14,6 @@ class registration_model{
     function viewUser() {
     $sql = 'SELECT * FROM user';
         $result = mysql_query($sql);
-
         if (mysql_num_rows($result) > 0) {
             $rows = array();
 

@@ -1,8 +1,18 @@
 <?php
     include_once 'config.php';
     include_once 'product_model.php';
+    include_once 'course_model.php';
+    include_once 'difficulty_model.php';
+
+    $difficultyModel = new difficulty_model();
+    $difficultyArray = $difficultyModel->viewDifficulty();
+
+    $category_model = new category_model();
+    $categoryArray = $category_model->viewCategory(); 
 
     $product_model = new product_model();
+    
+    $id = (isset($_GET['id']) && $_GET['id'] > 0) ? $_GET['id'] : 0;
     
     if ($_POST) {
         $postData = array('Question' =>$_POST['question'],'OptionA' => $_POST['optionA'],'OptionB' => $_POST['optionB'],'OptionC' => $_POST['optionC'],'OptionD' => $_POST['optionD'],'Answer' => $_POST['answer']);
@@ -37,7 +47,7 @@
                      <span class="icon-bar"></span>
                      <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="index.php">Online Exam</a>
+                    <a class="brand">Online Exam</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right">
                             <li class="dropdown">
@@ -46,7 +56,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a tabindex="-1" href="#"><i class="icon-eye-open"></i> Profile</a>
+                                        <a tabindex="-1" href="profile.php"><i class="icon-eye-open"></i> Profile</a>
                                     </li>
                                     <li class="divider"></li>
                                     <li>
@@ -56,7 +66,7 @@
                             </li>
                         </ul>
                         <ul class="nav">
-                            <li class="active">
+                            <li>
                                 <a href="index.php">Dashboard</a>
                             </li>
                             <li class="dropdown">
@@ -128,7 +138,7 @@
                 <!--span-->
                 <div class="span3" id="sidebar">
                     <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-                        <li class="active">
+                        <li>
                             <a href="index.php"><i class="icon-chevron-right"></i> Dashboard</a>
                         </li>
                         <li>
@@ -137,20 +147,8 @@
                         <li>
                             <a href="difficulty.php"><i class="icon-chevron-right"></i> Difficulty Types</a>
                         </li>
-                        <li>
+                        <li class="active">
                             <a href="question.php"><i class="icon-chevron-right"></i> Questions </a>
-                        </li>
-                        <li>
-                            <a href="tables.html"><i class="icon-chevron-right"></i> Tables</a>
-                        </li>
-                        <li>
-                            <a href="buttons.html"><i class="icon-chevron-right"></i> Buttons & Icons</a>
-                        </li>
-                        <li>
-                            <a href="editors.html"><i class="icon-chevron-right"></i> WYSIWYG Editors</a>
-                        </li>
-                        <li>
-                            <a href="interface.html"><i class="icon-chevron-right"></i> UI & Interface</a>
                         </li>
                     </ul>
                 </div>
@@ -179,15 +177,16 @@
                             <div class="block-content collapse in">
                                 <div class="span12">
                                      <form class="form-horizontal" method="POST">
+                                     <input type="hidden" name="id" value="<?php echo $id; ?>" >
                                       <fieldset>
                                         <legend>Add Questions</legend>
                                         <div class="control-group">
                                           <label class="control-label">Course<span class="required">*</span></label>
                                             <div class="controls">
-                                                <select name="course">
+                                                <select name="course" value="">
                                                   <option>--Select the Course--</option>
                                                   <?php foreach ($categoryArray as $key => $categoryValue) {?>
-                                                    <option value="<?php $categoryValue['Name']; ?>"><?php echo $categoryValue['Name']; ?></option>
+                                                    <option value="<?php echo $categoryValue['CategoryId']; ?>" <?php echo ($id && $productArray[$id]['CategoryId']==$categoryValue['CategoryId']) ? 'selected' : ''; ?> > <?php echo $categoryValue['Name']; ?></option>
                                                     <?php
                                                     }
                                                     ?>
@@ -197,10 +196,10 @@
                                         <div class="control-group">
                                           <label class="control-label">Difficulty Type<span class="required">*</span></label>
                                             <div class="controls">
-                                                <select name="difficulty">
+                                                <select name="difficulty" value="<?php echo $id ? $productArray[$id]['DifficultyId'] : '';?>">
                                                   <option>--Select the Difficulty Level--</option>
                                                     <?php foreach ($difficultyArray as $key => $difficultyValue) { ?>
-                                                        <option value="<?php $difficultyValue['Name']; ?>"><?php echo $difficultyValue['Name']; ?></option>
+                                                        <option value="<?php echo $difficultyValue['DifficultyId']; ?>" <?php echo ($id && $productArray[$id]['DifficultyId']==$difficultyValue['DifficultyId']) ? 'selected' : ''; ?>><?php echo $difficultyValue['Name']; ?></option>
                                                     <?php
                                                     }
                                                     ?>
@@ -210,47 +209,47 @@
                                         <div class="control-group">
                                           <label class="control-label" for="focusedInput">Question</label>
                                             <div class="controls">
-                                                <textarea class="input-xlarge focused" name="question" id="focusedInput" placeholder="Write the question..." style="margin: 0px; width: 473px; height: 115px"></textarea>
+                                                <textarea class="input-xlarge focused" name="question" id="focusedInput" placeholder="Write the question..." style="margin: 0px; width: 473px; height: 115px"><?php echo $id ? $productArray[$id]['Question'] : '';?></textarea>
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label">OptionA<span class="required">*</span></label>
                                             <div class="controls">
-                                                <input type="text" name="optionA" data-required="1" class="span3 m-wrap" placeholder="Write OptionA" />
+                                                <input type="text" name="optionA" data-required="1" class="span3 m-wrap" value="<?php echo $id ? $productArray[$id]['OptionA'] : '';?>" placeholder="Write OptionA" />
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label">OptionB<span class="required">*</span></label>
                                             <div class="controls">
-                                                <input type="text" name="optionB" data-required="1" class="span3 m-wrap" placeholder="Write OptionB"/>
+                                                <input type="text" name="optionB" data-required="1" class="span3 m-wrap" value="<?php echo $id ? $productArray[$id]['OptionB'] : '';?>" placeholder="Write OptionB"/>
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label">OptionC<span class="required">*</span></label>
                                             <div class="controls">
-                                                <input type="text" name="optionC" data-required="1" class="span3 m-wrap" placeholder="Write OptionC"/>
+                                                <input type="text" name="optionC" data-required="1" class="span3 m-wrap" value="<?php echo $id ? $productArray[$id]['OptionC'] : '';?>" placeholder="Write OptionC"/>
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label">OptionD<span class="required">*</span></label>
                                             <div class="controls">
-                                                <input type="text" name="optionD" data-required="1" class="span3 m-wrap" placeholder="Write OptionD"/>
+                                                <input type="text" name="optionD" data-required="1" class="span3 m-wrap" value="<?php echo $id ? $productArray[$id]['OptionD'] : '';?>" placeholder="Write OptionD"/>
                                             </div>
                                         </div>                                        
                                         <div class="control-group">
                                           <label class="control-label">Answer<span class="required">*</span></label>
                                             <div class="controls">
-                                                <select name="answer">
+                                                <select name="answer" value="<?php echo $id ? $productArray[$id]['Answer'] : '';?>">
                                                   <option>--Select the Answer--</option>
-                                                  <option value="1">OptionA</option>
-                                                  <option value="2">OptionB</option>
-                                                  <option value="3">OptionC</option>
-                                                  <option value="4">OptionD</option>
+                                                  <option value="1" <?php echo ($id && $productArray[$id]['Answer']==1) ? 'selected' : ''; ?>>OptionA</option>
+                                                  <option value="2" <?php echo ($id && $productArray[$id]['Answer']==2) ? 'selected' : ''; ?>>OptionB</option>
+                                                  <option value="3" <?php echo ($id && $productArray[$id]['Answer']==3) ? 'selected' : ''; ?>>OptionC</option>
+                                                  <option value="4" <?php echo ($id && $productArray[$id]['Answer']==4) ? 'selected' : ''; ?>>OptionD</option>
                                                 </select>
                                             </div>
                                         </div>   
                                         <div class="form-actions">
-                                          <button type="submit" class="btn btn-primary">Add Question</button>
+                                          <button type="submit" class="btn btn-primary"><?php echo $id ? 'Update':'Add Question'; ?></button>
                                           <button type="reset" class="btn">Cancel</button>
                                         </div>
                                     </fieldset>

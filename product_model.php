@@ -48,7 +48,7 @@ class product_model {
      * @return status of affected rows.
      */
 	function editProduct($id, $productAray) {
-		$sql = "UPDATE product SET Name = '".$productAray['Name']."',Description = '".$productAray['Description']."' WHERE ProductId= ".$id;
+		$sql = "UPDATE product SET Question = '".$productAray['Question']."',OptionA = '".$productAray['OptionA']."',OptionB = '".$productAray['OptionB']."',OptionC = '".$productAray['OptionC']."',OptionD = '".$productAray['OptionD']."',Answer=".$productAray['Answer'].",CategoryId=".$productAray['CategoryId'].",DifficultyId=".$productAray['DifficultyId']." WHERE ProductId= ".$id;
 		$result = mysql_query($sql);
 
 		return mysql_affected_rows();

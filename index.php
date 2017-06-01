@@ -34,7 +34,7 @@
                      <span class="icon-bar"></span>
                      <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="http://localhost/Admin/index.php">Online Exam</a>
+                    <a class="brand">Online Exam</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right">
                             <li class="dropdown">
@@ -43,7 +43,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a tabindex="-1" href="#"><i class="icon-eye-open"></i> Profile</a>
+                                        <a tabindex="-1" href="profile.php"><i class="icon-eye-open"></i> Profile</a>
                                     </li>
                                     <li class="divider"></li>
                                     <li>
@@ -53,7 +53,7 @@
                             </li>
                         </ul>
                         <ul class="nav">
-                            <li class="active">
+                            <li>
                                 <a href="index.php">Dashboard</a>
                             </li>
                             <li class="dropdown">
@@ -136,18 +136,6 @@
                         </li>
                         <li>
                             <a href="question.php"><i class="icon-chevron-right"></i> Questions </a>
-                        </li>
-                        <li>
-                            <a href="tables.html"><i class="icon-chevron-right"></i> Tables</a>
-                        </li>
-                        <li>
-                            <a href="buttons.html"><i class="icon-chevron-right"></i> Buttons & Icons</a>
-                        </li>
-                        <li>
-                            <a href="editors.html"><i class="icon-chevron-right"></i> WYSIWYG Editors</a>
-                        </li>
-                        <li>
-                            <a href="interface.html"><i class="icon-chevron-right"></i> UI & Interface</a>
                         </li>
                     </ul>
                 </div>

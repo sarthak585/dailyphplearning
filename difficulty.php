@@ -4,20 +4,33 @@
 
     $difficultyModel = new difficulty_model();
 
+    $id = (isset($_GET['id']) && $_GET['id'] > 0) ? $_GET['id'] : 0;
+    $action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
+
+    if($action=='delete' && $id>0){
+        $difficultyModel->deleteDifficulty($id);
+        $id = 0;
+    }  
+
     if ($_POST) {
-        $postData = array('Name' => $_POST['difficultyName'],'IsActive' => $_POST['isActive']);
-        $difficultyModel->addDifficulty($postData);
-    
+        $postData = array('Name' => $_POST['difficultyName'],'IsActive' => isset($_POST['IsActive'])?1:0);
+        
+        if ($_POST['id'] > 0) {
+            $difficultyModel->editDifficulty($_POST['id'],$postData);    
+        }
+        else {
+            $difficultyModel->addDifficulty($postData);     
+        }
+        header('location: difficulty.php');
     }
     $difficultyArray = $difficultyModel->viewDifficulty();
-    $id = (isset($_GET['id']) && $_GET['id'] > 0) ? $_GET['id'] : 0; 
 ?>
 
 <!DOCTYPE html>
 <html>
     
     <head>
-        <title>Difficulties</title>
+        <title>Difficulty Types</title>
         <!-- Bootstrap -->
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
@@ -29,7 +42,7 @@
         <![endif]-->
         <script src="vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
         <script language="JavaScript" type="text/javascript">
-                function checkDelete(difficultyId){
+                function checkDelete(DifficultyId){
                     if(confirm('Are you sure to delete?') == true) {
                     window.location.href = "http://localhost/admin/difficulty.php?action=delete&id="+DifficultyId;
                     }
@@ -45,7 +58,7 @@
                      <span class="icon-bar"></span>
                      <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="index.php">Online Exam</a>
+                    <a class="brand">Online Exam</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right">
                             <li class="dropdown">
@@ -54,7 +67,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a tabindex="-1" href="#"><i class="icon-eye-open"></i> Profile</a>
+                                        <a tabindex="-1" href="profile.php"><i class="icon-eye-open"></i> Profile</a>
                                     </li>
                                     <li class="divider"></li>
                                     <li>
@@ -64,7 +77,7 @@
                             </li>
                         </ul>
                         <ul class="nav">
-                            <li class="active">
+                            <li>
                                 <a href="index.php">Dashboard</a>
                             </li>
                             <li class="dropdown">
@@ -136,29 +149,17 @@
                 <!--span-->
                 <div class="span3" id="sidebar">
                     <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-                        <li class="active">
+                        <li>
                             <a href="index.php"><i class="icon-chevron-right"></i> Dashboard</a>
                         </li>
                         <li>
                             <a href="course.php"><i class="icon-chevron-right"></i> Courses</a>
                         </li>
-                        <li>
+                        <li class="active">
                             <a href="difficulty.php"><i class="icon-chevron-right"></i> Difficulty Types</a>
                         </li>
                         <li>
                             <a href="question.php"><i class="icon-chevron-right"></i> Questions </a>
-                        </li>
-                        <li>
-                            <a href="tables.html"><i class="icon-chevron-right"></i> Tables</a>
-                        </li>
-                        <li>
-                            <a href="buttons.html"><i class="icon-chevron-right"></i> Buttons & Icons</a>
-                        </li>
-                        <li>
-                            <a href="editors.html"><i class="icon-chevron-right"></i> WYSIWYG Editors</a>
-                        </li>
-                        <li>
-                            <a href="interface.html"><i class="icon-chevron-right"></i> UI & Interface</a>
                         </li>
                     </ul>
                 </div>
@@ -187,6 +188,7 @@
                             <div class="block-content collapse in">
                                 <div class="span12">
                                      <form class="form-horizontal" method="POST">
+                                     <input type="hidden" name="id" value="<?php echo $id; ?>" >
                                       <fieldset>
                                         <legend>Add Difficulty Type</legend>
                                         <div class="control-group">
@@ -196,15 +198,15 @@
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                          <label class="control-label" for="optionsCheckbox" >Active</label>
+                                          <label class="control-label" for="optionsCheckbox">Active</label>
                                           <div class="controls">
                                             <label class="uniform">
-                                              <input class="uniform_on" type="checkbox" id="optionsCheckbox" name="isActive" <?php echo ($id && $difficultyArray[$id]['IsActive']) ? 'checked="checked"' : ''; ?>>
+                                              <input class="uniform_on" type="checkbox" id="optionsCheckbox" name="IsActive" <?php echo ($id && $difficultyArray[$id]['IsActive']) ? 'checked="checked"' : ''; ?>>
                                             </label>
                                           </div>
                                         </div>
                                         <div class="form-actions">
-                                          <button type="submit" class="btn btn-primary">Add Difficulty Type</button>
+                                           <button type="submit" class="btn btn-primary"><?php echo $id ? 'Update': 'Add Difficulty Type'; ?></button>
                                           <button type="reset" class="btn">Cancel</button>
                                         </div>
                                     </fieldset>

@@ -27,10 +27,10 @@
         }
         else {
             $product_model->addProduct($postData);     
-        }
-       
-                
+        }       
+        header('location: question.php');
     }
+
     $productArray = $product_model->viewProduct(); 
 
 ?>
@@ -67,7 +67,7 @@
                      <span class="icon-bar"></span>
                      <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="index.php">Online Exam</a>
+                    <a class="brand">Online Exam</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right">
                             <li class="dropdown">
@@ -76,7 +76,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a tabindex="-1" href="#"><i class="icon-eye-open"></i> Profile</a>
+                                        <a tabindex="-1" href="profile.php"><i class="icon-eye-open"></i> Profile</a>
                                     </li>
                                     <li class="divider"></li>
                                     <li>
@@ -86,7 +86,7 @@
                             </li>
                         </ul>
                         <ul class="nav">
-                            <li class="active">
+                            <li>
                                 <a href="index.php">Dashboard</a>
                             </li>
                             <li class="dropdown">
@@ -158,7 +158,7 @@
                 <!--span-->
                 <div class="span3" id="sidebar">
                     <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-                        <li class="active">
+                        <li>
                             <a href="index.php"><i class="icon-chevron-right"></i> Dashboard</a>
                         </li>
                         <li>
@@ -167,21 +167,9 @@
                         <li>
                             <a href="difficulty.php"><i class="icon-chevron-right"></i> Difficulty Types</a>
                         </li>
-                        <li>
+                        <li class="active">
                             <a href="question.php"><i class="icon-chevron-right"></i> Questions </a>
-                        </li>
-                        <li>
-                            <a href="tables.html"><i class="icon-chevron-right"></i> Tables</a>
-                        </li>
-                        <li>
-                            <a href="buttons.html"><i class="icon-chevron-right"></i> Buttons & Icons</a>
-                        </li>
-                        <li>
-                            <a href="editors.html"><i class="icon-chevron-right"></i> WYSIWYG Editors</a>
-                        </li>
-                        <li>
-                            <a href="interface.html"><i class="icon-chevron-right"></i> UI & Interface</a>
-                        </li>
+                        </li>                        
                     </ul>
                 </div>
                 
@@ -213,7 +201,7 @@
                                       <fieldset>
                                         <legend>Add Questions</legend>
                                         <div class="control-group">
-                                          <label class="control-label">Course<span class="required">*</span></label>
+                                          <label class="control-label">First Name</label>
                                             <div class="controls">
                                                 <select name="course" value="">
                                                   <option>--Select the Course--</option>
@@ -225,7 +213,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="control-group">
+                                        <div class="control-group" >
                                           <label class="control-label">Difficulty Type<span class="required">*</span></label>
                                             <div class="controls">
                                                 <select name="difficulty" value="<?php echo $id ? $productArray[$id]['DifficultyId'] : '';?>">
@@ -239,7 +227,7 @@
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                          <label class="control-label" for="focusedInput">Question</label>
+                                          <label class="control-label" for="focusedInput">Question<span class="required">*</span></label>
                                             <div class="controls">
                                                 <textarea class="input-xlarge focused" name="question" id="focusedInput" placeholder="Write the question..." style="margin: 0px; width: 473px; height: 115px"><?php echo $id ? $productArray[$id]['Question'] : '';?></textarea>
                                             </div>
@@ -281,7 +269,7 @@
                                             </div>
                                         </div>   
                                         <div class="form-actions">
-                                          <button type="submit" class="btn btn-primary"><?php echo $id ? 'Save':'Add Question'; ?></button>
+                                          <button type="submit" class="btn btn-primary"><?php echo $id ? 'Update':'Add Question'; ?></button>
                                           <button type="reset" class="btn">Cancel</button>
                                         </div>
                                     </fieldset>

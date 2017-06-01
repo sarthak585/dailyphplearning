@@ -22,13 +22,14 @@ class category_model {
 	
 	function addCategory($categoryAray) {
 		$sql = "INSERT INTO category (Name, IsActive) VALUES('".$categoryAray['Name']."','".$categoryAray['IsActive']."')";
+		
 		$result = mysql_query($sql);
 		
 		return mysql_affected_rows();
 	}
 	
 	function editCategory($id, $categoryAray) {
-		$sql = "UPDATE category SET Name = '".$categoryAray['Name']."', IsActive = '".$categoryAray['IsActive']."' WHERE CategoryId= ".$id;
+		$sql = "UPDATE category SET Name = '".$categoryAray['Name']."', IsActive = ".$categoryAray['IsActive']." WHERE CategoryId= ".$id;
 		$result = mysql_query($sql);
 		
 		return mysql_affected_rows();
