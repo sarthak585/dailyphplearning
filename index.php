@@ -43,7 +43,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a tabindex="-1" href="profile.php"><i class="icon-eye-open"></i> Profile</a>
+                                        <a tabindex="-1" href="profile.php?id=<?php echo $_SESSION['id']; ?>"><i class="icon-eye-open"></i> Profile</a>
                                     </li>
                                     <li class="divider"></li>
                                     <li>
@@ -55,35 +55,6 @@
                         <ul class="nav">
                             <li>
                                 <a href="index.php">Dashboard</a>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Settings <b class="caret"></b>
-
-                                </a>
-                                <ul class="dropdown-menu" id="menu1">
-                                    <li>
-                                        <a href="#">Tools <i class="icon-arrow-right"></i>
-
-                                        </a>
-                                        <ul class="dropdown-menu sub-menu">
-                                            <li>
-                                                <a href="#">Reports</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Logs</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Errors</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">SEO Settings</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Other Link</a>
-                                    </li>
-                               </ul>
                             </li>
                             <li class="dropdown">
                                 <a href="question.php" role="button" class="dropdown-toggle" data-toggle="dropdown">Questions <i class="caret"></i>
@@ -105,12 +76,6 @@
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a tabindex="-1" href="index.php">User List</a>
-                                    </li>
-                                    <li>
-                                        <a tabindex="-1" href="#">Search</a>
-                                    </li>
-                                    <li>
-                                        <a tabindex="-1" href="#">Permissions</a>
                                     </li>
                                 </ul>
                             </li>
@@ -175,6 +140,7 @@
                                                 <th>Username</th>
                                                 <th>Phone Number</th>                                          
                                                 <th>E-mail ID</th>                                          
+                                                <th>User Type</th>                                          
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -188,6 +154,7 @@
                                                 <td><?php echo $value['UserName']; ?></td>
                                                 <td><?php echo $value['Phone']; ?></td>
                                                 <td><?php echo $value['Email']; ?></td>
+                                                <td><?php echo $value['UserRole']; ?></td>
                                             </tr>
                                             <?php
                                                 }

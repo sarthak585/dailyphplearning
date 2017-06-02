@@ -2,7 +2,8 @@
 /*
  * Include necessary files.
  */
-include_once 'connect_db.php';
+$doNotAuthenticate = true;
+include_once 'config.php';
 
 class login_model{
     /*
@@ -11,8 +12,8 @@ class login_model{
      * @param var @password.
      * @return object $user.
      */
-	function getUserByUsernameAndPassword ($username, $password) {
-		$sql = 'SELECT * FROM `user` WHERE UserName="'.$username.'" AND Password="'.$password.'"';
+	function getAdminUserByUsernameAndPassword($username, $password) {
+		$sql = 'SELECT * FROM `user` WHERE UserName="'.$username.'" AND Password="'.$password.'" AND UserRole ="'.USER_ROLE_ADMIN.'"';
 	 	$result = mysql_query($sql);
 
 		return mysql_fetch_assoc($result);

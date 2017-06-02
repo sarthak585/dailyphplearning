@@ -2,9 +2,22 @@
     include_once 'config.php';
     include_once 'registration_model.php';
 
-    $user = new registration_model();
-    $userArray = $user->viewUser();
     $id = $_SESSION['id'];
+    $user = new registration_model();
+    
+
+    if ($_POST) {
+        $postData = array('FirstName' => $_POST['fname'],'LastName' => $_POST['lname'],'Password' => $_POST['password'],'Email' => $_POST['email'],'Phone' => $_POST['phone'],);
+        
+        if ($_POST['id'] > 0) {
+            $user->editUser($_POST['id'],$postData);    
+        }
+        else {
+            $user->addUser($postData);     
+        }   
+        /*header('location: php.php');*/
+    }
+    $userArray = $user->viewUser();
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +54,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a tabindex="-1" href="profile.php"><i class="icon-eye-open"></i> Profile</a>
+                                        <a tabindex="-1" ><i class="icon-eye-open"></i> Profile</a>
                                     </li>
                                     <li class="divider"></li>
                                     <li>
@@ -53,36 +66,7 @@
                         <ul class="nav">
                             <li>
                                 <a href="index.php">Dashboard</a>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Settings <b class="caret"></b>
-
-                                </a>
-                                <ul class="dropdown-menu" id="menu1">
-                                    <li>
-                                        <a href="#">Tools <i class="icon-arrow-right"></i>
-
-                                        </a>
-                                        <ul class="dropdown-menu sub-menu">
-                                            <li>
-                                                <a href="#">Reports</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Logs</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Errors</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">SEO Settings</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Other Link</a>
-                                    </li>
-                                </ul>
-                            </li>
+                            </li>                            
                             <li class="dropdown">
                                 <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Questions <i class="caret"></i>
 
@@ -103,13 +87,7 @@
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a tabindex="-1" href="index.php">User List</a>
-                                    </li>
-                                    <li>
-                                        <a tabindex="-1" href="#">Search</a>
-                                    </li>
-                                    <li>
-                                        <a tabindex="-1" href="#">Permissions</a>
-                                    </li>
+                                    </li>                                    
                                 </ul>
                             </li>
                         </ul>
@@ -186,12 +164,26 @@
                                         <div class="control-group">
                                           <label class="control-label">Password</label>
                                             <div class="controls">
-                                               <input type="text" name="password" id="password" class="span4 m-wrap" value="<?php echo $userArray[$id]['Password'];?>"/>
+                                               <input type="password" name="password" class="span4 m-wrap" value="<?php echo $userArray[$id]['Password'];?>"/>
                                             </div>
-                                        </div>                                        
+                                        </div>
+                                        <div class="control-group">
+                                          <label class="control-label">E-mail</label>
+                                            <div class="controls">
+                                               <input type="text" name="email" class="span4 m-wrap" value="<?php echo $userArray[$id]['Email'];?>"/>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                          <label class="control-label">Phone Number</label>
+                                            <div class="controls">
+                                               <input type="text" name="phone" class="span4 m-wrap" value="<?php echo $userArray[$id]['Phone'];?>"/>
+                                            </div>
+                                        </div>
+
                                         <div class="form-actions">
                                           <button type="submit" class="btn btn-primary">Update</button>
-                                          <button type="reset" class="btn">Cancel</button>
+                                          <button type="reset" class="btn">Reset</button>
+                                          <a href="index.php"> <button type="button" class="btn">Cancel</button> </a>
                                         </div>
                                     </fieldset>
                                     </form>
