@@ -2,9 +2,40 @@
 /*
  * Include necessary files.
  */
+
 include_once 'connect_db.php';
 
 class product_model {
+    /*
+     * Run Select Query to get data from table.
+     * Get product data by CategoryId.
+     * @param int $categoyid.
+     * @return array $rows - product rows by categoryid.
+     */
+    /**
+     * @param $categoryId
+     * @param $difficultyLevelId
+     * @return array|null
+     */
+    function getProductsByCategoryAndDifficultyLevel($categoryId, $difficultyLevelId) {
+		$sql = 'SELECT * FROM product WHERE CategoryId = '.$categoryId.' AND DifficultyId = '.$difficultyLevelId.' LIMIT 0, 10';
+
+		$result = mysql_query($sql);
+
+		if (mysql_num_rows($result) > 0) {
+			$rows = array();
+
+			// output data of each row
+			while($row = mysql_fetch_assoc($result)) {
+				$rows[] = $row;
+			}
+
+			return $rows;
+		} else {
+			return null;
+		}
+	}
+	
     /*
      * Run Select Query to get data from table.
      * Get product data by CategoryId.

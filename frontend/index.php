@@ -11,12 +11,13 @@
     $category_model = new category_model();
     $categoryArray = $category_model->viewCategory(); 
 
-    $orderinvoice_model = new orderinvoice_model();
-
-    if ($_POST) {
+    if ($_POST && $_POST['course'] > 0  && $_POST['difficulty'] > 0) {
         $postData = array('UserId' =>$_SESSION['id'],'CategoryId' =>$_POST['course'],'DifficultyId' =>$_POST['difficulty']);
+        
 
-        $orderinvoice_model->addOrderinvoice($postData);
+        $json = json_encode($postData);
+		
+        setcookie(userData, $json, time() + (86400));
 
         header('location: confirmation.php');
     }    
@@ -70,34 +71,7 @@
                         </ul>
                         <ul class="nav">
                             <li>
-                                <a href="index.php">Home</a>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Settings <b class="caret"></b>
-                                </a>
-                            </li>
-                            <li class="dropdown">
-                                <a href="question.php" role="button" class="dropdown-toggle" data-toggle="dropdown">Questions <i class="caret"></i>
-
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a tabindex="-1" href="addquestion.php">Add Quetions</a>
-                                    </li>
-                                    <li>
-                                        <a tabindex="-1" href="question.php">Manage Quetions</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Users <i class="caret"></i>
-
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a tabindex="-1" href="index.php">User List</a>
-                                    </li>
-                                </ul>
+                                <a href="index.php"><i class="icon-home"></i> Home</a>
                             </li>
                         </ul>
                     </div>
@@ -115,17 +89,17 @@
                             <!-- block -->
                             <div class="block">
                                 <div class="navbar navbar-inner block-header">
-                                    <div class="muted pull-left">Test Selection</div>
+                                    <div class="muted pull-left"><i class="icon-list-alt"></i> Test Selection</div>
                                 </div>
                                 <div class="block-content collapse in">
                                     <form class="form-horizontal" method="POST">
                                      <input type="hidden" name="id" value="<?php echo $id; ?>" >
                                       <fieldset>
-                                        <legend>Select Test</legend>
+                                        <legend><i class="icon-th-list" style="margin-top: 4px;"></i> Select Test</legend>
                                         <div class="control-group">
-                                          <label class="control-label">Course</label>
+                                          <label class="control-label">Course<span class="required">*</span></label>
                                             <div class="controls">
-                                                <select name="course">
+                                                <select name="course" required="required">
                                                   <option>--Select the Course--</option>
                                                   <?php foreach ($categoryArray as $key => $categoryValue) {?>
                                                     <option value="<?php echo $categoryValue['CategoryId']; ?>"> <?php echo $categoryValue['Name']; ?></option>
@@ -136,9 +110,9 @@
                                             </div>
                                         </div>
                                         <div class="control-group" >
-                                          <label class="control-label">Difficulty Level</label>
+                                          <label class="control-label">Difficulty Level<span class="required">*</span></label>
                                             <div class="controls">
-                                                <select name="difficulty">
+                                                <select name="difficulty" required="required">
                                                   <option>--Select the Difficulty Level--</option>
                                                     <?php foreach ($difficultyArray as $key => $difficultyValue) { ?>
                                                         <option value="<?php echo $difficultyValue['DifficultyId']; ?>"><?php echo $difficultyValue['Name']; ?></option>

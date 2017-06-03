@@ -33,7 +33,9 @@ include_once "config.php";
                         <div id="login" class="animate form">
                             <?php
                             if (isset($_GET['iserror']) && $_GET['iserror']==true){
-                                echo "Invalid Username or Password";
+                                echo '<script language="javascript">';
+                                echo 'alert("Invalid Username or Password")';
+                                echo '</script>';
                             }
                             ?>
                             <form  method="post" action="<?php echo BASE_URL; ?>login.php" autocomplete="on"> 

@@ -1,13 +1,23 @@
 <?php
     include_once 'config.php';
+    include_once '../course_model.php';
+    include_once '../difficulty_model.php';
     include_once 'orderinvoice_model.php';
 
-    $orderinvoice_model = new orderinvoice_model();
-    $orderinvoiceValue = $orderinvoice_model->viewOrderinvoice();
-    /*echo '<pre>';
-    print_r($orderinvoiceValue);
-    exit;*/
+    $category_model = new category_model();
+    $categoryArray = $category_model->viewCategory();
 
+    $difficultyModel = new difficulty_model();
+    $difficultyArray = $difficultyModel->viewDifficulty();
+
+    $orderinvoice_model = new orderinvoice_model();
+       
+    $cookie = $_COOKIE['userData'];
+    $cookie = stripslashes($cookie);
+    $postData = json_decode($cookie, true);
+
+    $orderId = $orderinvoice_model->addOrderinvoice($postData);
+    $_SESSION['orderId'] = $orderId;
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +68,7 @@
                         </ul>
                         <ul class="nav">
                             <li>
-                                <a href="index.php">Home</a>
+                                <a href="index.php"><i class="icon-home"></i> Home</a>
                             </li>
                         </ul>
                     </div>
@@ -75,19 +85,19 @@
                         <!-- block -->
                         <div class="block">
                             <div class="navbar navbar-inner block-header">
-                                <div class="muted pull-left">Test Confirmation</div>
+                                <div class="muted pull-left"><i class="icon-check"></i> Test Confirmation</div>
                             </div>
                             <div class="block-content collapse in">
                                 <div class="span12">
                                     <table class="table table-bordered">
                                       <tbody>
                                         <tr>
-                                          <td><b>Course</b></td>
-                                          <td><?php echo $orderinvoiceValue[3]['CategoryId'];  ?></td>
+                                          <td style="width: 20%;"><b>Course</b></td>
+                                          <td><?php echo $categoryArray[$postData['CategoryId']]['Name'];  ?></td>
                                         </tr>
                                         <tr>
                                           <td><b>Difficulty Level</b></td>
-                                          <td>Mark</td>
+                                          <td><?php echo $difficultyArray[$postData['DifficultyId']]['Name'];  ?></td>
                                         </tr>
                                         <tr>
                                           <td><b>Number of questions in test</b></td>
@@ -101,6 +111,11 @@
                                       </tbody>
                                     </table>
                                 </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                              <a href="exam.php"><button type="submit" class="btn btn-primary" value="submit"><i class="icon-thumbs-up icon-white"></i> Start Now.!</button></a>
+                              <a href="index.php"><button type="reset" class="btn">Cancel</button></a>
                             </div>
                         </div>
                         <!-- /block -->

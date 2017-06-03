@@ -12,6 +12,31 @@ class orderinvoice_model{
      * @param int $categoyid.
      * @return array $rows - product rows by categoryid.
      */
+    /**
+     * @param $orderId
+     * @return mixed|null
+     */
+    function getOrderById($orderId) {
+    $sql = 'SELECT * FROM orderinvoice WHERE OrderId = '.$orderId;
+    
+        $result = mysql_query($sql);
+
+        if (mysql_num_rows($result) > 0) {
+
+            // output data of each row
+            $row = mysql_fetch_assoc($result);
+
+            return $row;
+        } else {
+            return null;
+        }
+    }
+    /*
+     * Run Select Query to get data from table.
+     * Get product data by CategoryId.
+     * @param int $categoyid.
+     * @return array $rows - product rows by categoryid.
+     */
     function viewOrderinvoice() {
     $sql = 'SELECT * FROM orderinvoice';
 
@@ -41,7 +66,7 @@ class orderinvoice_model{
         
 	 	mysql_query($sql);
 
-		return mysql_affected_rows();
+		return mysql_insert_id();
 	}
 }
 

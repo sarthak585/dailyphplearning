@@ -67,7 +67,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a tabindex="-1" href="profile.php?id=<?php echo $_SESSION['id']; ?>"><i class="icon-eye-open"></i> Profile</a>
+                                        <a tabindex="-1" href="profile.php"><i class="icon-eye-open"></i> Profile</a>
                                     </li>
                                     <li class="divider"></li>
                                     <li>

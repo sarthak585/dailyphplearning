@@ -65,31 +65,8 @@
                         </ul>
                         <ul class="nav">
                             <li>
-                                <a href="index.php">Home</a>
-                            </li>                            
-                            <li class="dropdown">
-                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Questions <i class="caret"></i>
-
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a tabindex="-1" href="addquestion.php">Add Quetions</a>
-                                    </li>
-                                    <li>
-                                        <a tabindex="-1" href="question.php">Manage Quetions</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Users <i class="caret"></i>
-
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a tabindex="-1" href="index.php">User List</a>
-                                    </li>                                    
-                                </ul>
-                            </li>
+                                <a href="index.php"><i class="icon-home"></i> Home</a>
+                            </li> 
                         </ul>
                     </div>
                     <!--/.nav-collapse -->
@@ -104,14 +81,14 @@
                         <!-- block -->
                         <div class="block">
                             <div class="navbar navbar-inner block-header">
-                                <div class="muted pull-left">Profile</div>
+                                <div class="muted pull-left"><i class="icon-eye-open"></i> Profile</div>
                             </div>
                             <div class="block-content collapse in">
                                 <div class="span12">
                                      <form class="form-horizontal" method="POST">
                                      <input type="hidden" name="id" value="<?php echo $id; ?>" >
                                       <fieldset>
-                                        <legend>Edit Profile</legend>
+                                        <legend><i class="icon-edit"></i> Edit Profile</legend>
                                         <div class="control-group">
                                           <label class="control-label">First Name</label>
                                             <div class="controls">
@@ -150,7 +127,7 @@
                                         </div>
 
                                         <div class="form-actions">
-                                          <button type="submit" class="btn btn-primary">Update</button>
+                                          <button type="submit" class="btn btn-primary"><i class="icon-refresh icon-white"></i> Update</button>
                                           <button type="reset" class="btn">Reset</button>
                                           <a href="index.php"> <button type="button" class="btn">Cancel</button> </a>
                                         </div>
