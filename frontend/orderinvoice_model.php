@@ -68,6 +68,11 @@ class orderinvoice_model{
 
 		return mysql_insert_id();
 	}
+
+    function updateTotalScoreAndTotalTime($orderId) {
+        $sql = "UPDATE orderinvoice SET TotalScore = (SELECT SUM(Score) AS TotalScore FROM orderdetail WHERE OrderId= ".$orderId."), TotalTime = (SELECT SUM(Time) AS TotalTime FROM orderdetail WHERE OrderId= ".$orderId.") WHERE OrderId= ".$orderId;
+        $result = mysql_query($sql);
+    }
 }
 
 ?>

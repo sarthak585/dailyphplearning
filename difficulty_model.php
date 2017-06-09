@@ -40,6 +40,18 @@ class difficulty_model {
 		
 		return mysql_affected_rows();
 	}
+
+	function getDifficultyNameById($id) {
+		$sql = "SELECT Name FROM difficulty WHERE DifficultyId=".$id;
+		$result = mysql_query($sql);
+		
+		if (mysql_num_rows($result) > 0) {
+			$row = mysql_fetch_assoc($result);
+			return $row;
+		} else {
+			return 0;
+		}	
+	}
 }
 
 ?>

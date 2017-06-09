@@ -15,26 +15,29 @@
 	$order = $orderinvoice_model->getOrderById($_SESSION['orderId']);
 
 	$products = $productModel->getProductsByCategoryAndDifficultyLevel($order['CategoryId'], $order['DifficultyId']);
-    /*echo '<pre>';
-    print_r($products);
-    exit;*/
+    
 
     if ($_POST) {
-	    $product = $products[$_POST['productId']];
-	    $totalScore = ($_POST['answer'] == $product['Answer']) ? 1 : 0;
-        $currentStep = $_POST['currentStep'] + 1;
+	    $product = $products[$_POST['currentStep']];
+        $selectedAnswer = array_key_exists('answer', $_POST)? $_POST['answer']:0;
+	    $score = ($selectedAnswer == $product['Answer']) ? 1 : 0;
 
         $postData = array(
             'OrderId' => $_SESSION['orderId'],
             'ProductId' =>$_POST['productId'],
-            'TotalScore' =>$totalScore,
-		    'CreatedDateTime' => date('Y-m-d H:i:s'),
-            'UpdatedDateTime' => date('Y-m-d H:i:s')
+            'GivenAnswer' =>$selectedAnswer,
+            'Score' =>$score,
+            'Time' =>$_POST['totalTime'],
         );
 
         $orderdetail_model->addOrderDetail($postData);
 
-        echo json_encode(['product' => $products[$currentStep]]);exit;
+        $currentStep = $_POST['currentStep'] + 1;
+
+        if ($currentStep == count($products)) {
+            echo json_encode(array('currentStep' => $currentStep, 'lastproduct' => count($products)));exit;
+        }
+            echo json_encode(array('product' => $products[$currentStep], 'currentStep' => $currentStep, 'lastproduct' => count($products)));exit;
     }
 
     $product = $products[$currentStep];
@@ -56,28 +59,60 @@
         <![endif]-->
         <script src="vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
         <script>
-            $(document).ready(function(){
-                $('.submitAnswer').click(function(){
+            var countDownTimer;
+            countDown();
+
+                function countDown(){
+                    var counter = 120;
+                    $('#timer').html('02:00');
+                    clearInterval(countDownTimer);
+                    countDownTimer = setInterval(function() {
+                        counter--;
+
+                        minutes = ("0" + Math.floor(counter/60)).slice(-2);
+                        seconds = ("0" + (counter%60)).slice(-2);
+
+                        if (counter >= 0) {
+                            $('#timer').html(minutes + ':' + seconds);
+                            $('#totalTime').val(120-counter);
+                        }
+                        // Display 'counter' wherever you want to display it.
+                        if (counter === 0) {
+                            submitAnswer();
+                            clearInterval(counter);
+                        }
+                    }, 1000);
+                };
+                function submitAnswer(){
                     $.ajax({
                         method: "POST",
                         url: "http://localhost/Admin/frontend/exam.php",
                         dataType: 'json',
                         data: $('form').serialize(),
                         success: function(response) {
+                            if (response.currentStep == response.lastproduct) {
+                                window.location = 'http://localhost/Admin/frontend/final.php';
+                            }
+                            $('#currentStep').val(response.currentStep);
+                            $('#productId').val(response.product.ProductId);
                             $('.product-question').html(response.product.Question);
-                            $('.product-question .option1').text(response.product.OptionA);
-                            $('.product-question .option2').text(response.product.OptionB);
-                            $('.product-question .option3').text(response.product.OptionC);
-                            $('.product-question .option4').text(response.product.OptionD);
+
+                            $('.option1').html(response.product.OptionA);
+                            $('.option2').html(response.product.OptionB);
+                            $('.option3').html(response.product.OptionC);
+                            $('.option4').html(response.product.OptionD);
+
+                            $('input:radio').removeAttr('checked');
+                            countDown();
                         },
                         error: function(response) {
-                            console.log(response);  
+                            alert('Error');  
                         }
 
                     });
-                });
-            });
+                };
         </script>
     </head>
     
@@ -126,11 +161,15 @@
                             <div class="block">
                                 <div class="navbar navbar-inner block-header">
                                     <div class="muted pull-left"><i class="icon-time"></i> Answer the Questions</div>
+                                    <div class="pull-right">Time Remaining <span class="badge badge-info" id="timer">02:00</span>
+
+                                    </div>
                                 </div>
                                 <div class="block-content collapse in">
                                     <form class="form-horizontal" method="POST">
-                                        <input type="hidden" name="currentStep" value="<?php echo $currentStep; ?>" >
-                                        <input type="hidden" name="productId" value="<?php echo $product['ProductId']; ?>" >
+                                        <input type="hidden" name="currentStep" id="currentStep" value="<?php echo $currentStep; ?>" >
+                                        <input type="hidden" name="productId" id="productId" value="<?php echo $product['ProductId']; ?>" >
+                                        <input type="hidden" name="totalTime" id="totalTime">
                                         <fieldset style="width: 90%;">
                                             <legend><i class="icon-question-sign" style="margin-top: 4px"></i> Questions</legend>
                                             <table class="table" style="margin-left: 10%;">
@@ -139,26 +178,26 @@
                                                 <div class="controls product-answers">
                                                 <tr>
                                                     <td style="border-top: aqua; width: 20%;">
-                                                    <input type="radio" class="option1" name="answer[]" value="1"> <?php echo $product['OptionA']; ?>
+                                                    <input type="radio" name="answer" value="1"><span class="option1"> <?php echo $product['OptionA']; ?></span>
                                                     </td>
                                                     <td style="border-top: aqua;">
-                                                    <input type="radio" class="option2" name="answer[]" value="2"> <?php echo $product['OptionB']; ?>
+                                                    <input type="radio" name="answer" value="2"><span class="option2"> <?php echo $product['OptionB']; ?></span>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="border-top: aqua;">
-                                                    <input type="radio" class="option3" name="answer[]" value="3"> <?php echo $product['OptionC']; ?>
+                                                    <input type="radio" name="answer" value="3"><span class="option3"> <?php echo $product['OptionC']; ?></span>
                                                     </td>
                                                     <td style="border-top: aqua;">
-                                                    <input type="radio" class="option4" name="answer[]" value="4"> <?php echo $product['OptionD']; ?>
+                                                    <input type="radio" name="answer" value="4"><span class="option4"> <?php echo $product['OptionD']; ?></span>
                                                     </td>
                                                 </tr>    
                                                 </div>
                                             </div>
                                             </table>
                                             <div class="form-actions">
-                                                <button type="button" class="submitAnswer btn btn-primary">Submit Answer</button>
-                                                <button type="reset" class="btn">Skip <i class="icon-forward"></i></button>
+                                                <button type="button" onclick="submitAnswer();" class="submitAnswer btn btn-primary">Submit Answer</button>
+                                                <button type="button" onclick="$('input:radio').removeAttr('checked'); submitAnswer();" class="btn">Skip <i class="icon-forward"></i></button>
                                             </div>
                                         </fieldset>
                                     </form>
@@ -181,4 +220,4 @@
         <script src="assets/scripts.js"></script>
     </body>
 
-</html>
+</html

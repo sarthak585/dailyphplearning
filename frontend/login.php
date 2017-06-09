@@ -17,6 +17,8 @@
 		session_start();
 		$_SESSION['username']=$user['UserName'];
 		$_SESSION['fname']=$user['FirstName'];
+		$_SESSION['lname']=$user['LastName'];
+		$_SESSION['mail']=$user['Email'];
 		$_SESSION['id']=$user['UserId'];
 		$_SESSION['userrole']=$user['UserRole'];
 		$_SESSION['isAuthenticated']=true;

@@ -38,7 +38,7 @@ class orderdetail_model{
      * @return int
      */
     function addOrderDetail($invoiceData) {
-		$sql = "INSERT INTO orderinvoice(OrderId, ProductId, TotalScore) VALUES ('".$invoiceData['OrderId']."','".$invoiceData['ProductId']."','".$invoiceData['TotalScore']."')";
+		$sql = "INSERT INTO orderdetail (OrderId, ProductId, GivenAnswer, Score, Time) VALUES ('".$invoiceData['OrderId']."','".$invoiceData['ProductId']."',".$invoiceData['GivenAnswer'].",".$invoiceData['Score'].",'".$invoiceData['Time']."')";
         
 	 	mysql_query($sql);
 

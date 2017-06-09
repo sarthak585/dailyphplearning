@@ -40,7 +40,22 @@ class category_model {
 		$result = mysql_query($sql);
 		
 		return mysql_affected_rows();
+	
 	}
+
+	function getCategoryNameById($id) {
+		$sql = "SELECT Name FROM category WHERE CategoryId=".$id;
+		$result = mysql_query($sql);
+		
+		if (mysql_num_rows($result) > 0) {
+			$row = mysql_fetch_assoc($result);
+			return $row;
+		}else {
+				return 0;
+			}	
+	}
+
+
 }
 
 ?>
